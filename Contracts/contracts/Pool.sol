@@ -53,11 +53,11 @@ contract InstaPayPool is Ownable {
     }
 
     // @dev Convert all ETH to DAI
-    function stablize() public onlyOwner returns(bool success) {
+    function stabilize() public onlyOwner returns(bool success) {
         uint srcQty = address(this).balance;    // Convert all ETH to DAI
         require(
             srcQty > 0,
-            "Nothing to stablize"
+            "Nothing to stabilize"
         );
         uint maxDestAmount = MAX_DAI_AMOUNT;
         uint minConversionRate;
