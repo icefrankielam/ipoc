@@ -4,7 +4,8 @@
 
 InstaPayPool Contract
 - Main net: https://etherscan.io/address/0x3D18f83BedC73F2730Cf179214976e3C6aaB06C3
-- Ropsten: https://ropsten.etherscan.io/address/0x74506c5651b4e496b369fa4ebdd9422629a0d838
+- Ropsten: https://ropsten.etherscan.io/address/0x730666Fd1409Da3F6d51752C475fDA0934E634E2
+- (OUTDATED Ropsten: https://ropsten.etherscan.io/address/0x74506c5651b4e496b369fa4ebdd9422629a0d838 )
 - Interface:
   - function fund() external payable {}
   - function stablize() public onlyOwner returns(bool success) {}
