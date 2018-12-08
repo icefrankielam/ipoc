@@ -22,12 +22,13 @@ InstaPayPool Contract
 - Outstanding loan? Paycheck pays back loan (reserve pool contract), remaining amount goes to employee, otherwise goes to employee as usual (employee = employee Status account)
 - *(Can work without payroll integration, integration assumed in this hackathon)*
 
-### Pool (invest in ETH ONLY, will convert to DAI via `stablize()` call)
+### Pool (invest in ETH ONLY, will convert to DAI)
 - Initial reserve pool provided by **IPOC** investors in **ETH** stored in Smart Contract (Solidity)
+- ETH in pool will be converted to DAI via `stablize()` call
 - Threshold: raise fixed amount (e.g. 50% pool size) via loan when balance is below threshold (50%)
 - Submit debt order when below threshold (handled by server), loan amount in ETH goes straight to Smart Contract
-- Handles loan repayment on loan due day
-- Paycheck loan payback goes directly to reserve pool smart contract
+- Handles loan repayment on loan due day (NOT implemented)
+- Paycheck loan payback goes directly to reserve pool smart contract (NOT implemented)
 
 ### Investors (in ETH ONLY)
 - Fund loan orders submitted to relay (via Dharma) (Dharma portion NOT implemented)
