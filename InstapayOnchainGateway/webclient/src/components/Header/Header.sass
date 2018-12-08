@@ -1,0 +1,41 @@
+@import '@/variables'
+
+.Header
+  display: flex
+  align-items: center
+  justify-content: space-between
+
+  padding: 0 $body-side-spacing
+
+  .HeaderRoutes
+    display: flex
+    list-style-type: none
+
+    .HeaderRoute
+      margin-left: 1em
+
+.Mobile, .Tablet
+  .Header
+    display: flex
+    // align-items: baseline
+    justify-content: space-between
+    list-style-type: none
+    padding: 0 $body-side-spacing
+
+    .HeaderRoutes
+      display: flex
+      list-style-type: none
+      &.EmployerHeaderRoutes
+        flex-direction: column
+        // flex-flow: column-reverse
+        margin-top: 0
+        list-style-type: none
+        a
+          float: right
+
+      .HeaderRoute
+        margin-left: 1em
+
+.Desktop
+  .Header
+    margin-bottom: 2em

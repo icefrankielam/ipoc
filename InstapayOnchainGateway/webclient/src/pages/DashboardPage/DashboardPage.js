@@ -13,7 +13,6 @@ const DashboardPage = ({ history }) => {
   document.title = 'InstapayOnchain - DashboardPage'
   return (
     <div className="DashboardPage">
-      <h1>Dashboard</h1>
       <PaycheckInfo />
       <RequestInstapayForm />
       <RequestLoanForm />

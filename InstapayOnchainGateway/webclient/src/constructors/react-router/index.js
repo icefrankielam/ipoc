@@ -48,20 +48,26 @@ const ReactRouter = ({ layout }) => {
     <>
       <Router history={history}>
         <Switch>
-          <PublicOnlyRoute key={1} exact path="/login" layoutComponent={Layout.Desktop.Public} component={LoginPage} />
-          <PublicOnlyRoute key={2} exact path="/register" layoutComponent={Layout.Desktop.Public} component={RegisterPage} />
-          <PublicRoute key={3} exact path="/sandbox" layoutComponent={Layout.Desktop.Public} component={SandboxPage} />
-          <PublicRoute key={3} exact path="/invest" layoutComponent={Layout.Desktop.Public} component={InvestPage} />
+          <PublicOnlyRoute exact path="/login" layoutComponent={Layout.Public} component={LoginPage} />
+          <PublicOnlyRoute exact path="/register" layoutComponent={Layout.Public} component={RegisterPage} />
+          <PublicRoute exact path="/sandbox" layoutComponent={Layout.Public} component={SandboxPage} />
           <DualRoute
-            key={4}
             exact
             path="/"
             AuthComponent={DashboardPage}
             NoAuthComponent={HomePage}
-            AuthLayout={Layout.Desktop.Private}
-            NoAuthLayout={Layout.Desktop.Public}
+            AuthLayout={Layout.Private}
+            NoAuthLayout={Layout.Public}
           />
-          <Layout.Desktop.Private key={5}>
+          <DualRoute
+            exact
+            path="/invest"
+            AuthComponent={InvestPage}
+            NoAuthComponent={InvestPage}
+            AuthLayout={Layout.Private}
+            NoAuthLayout={Layout.Public}
+          />
+          <Layout.Private>
             {/*<PrivateRoute exact path="/messages" component={MessagesPage} />*/}
             <PrivateRoute exact path="/settings/user/profile" component={UserProfilePage} />
             <MultiUserTypeRoute exact path="/settings" AuthEmployerComponent={EmployerSettingsPage} AuthUserComponent={UserSettingsPage} />
@@ -69,7 +75,7 @@ const ReactRouter = ({ layout }) => {
             {/*<EmployerOnlyRoute exact path="/employees/update" component={EmployerManageEmployeeAccountsPage} />*/}
             <EmployerOnlyRoute exact path="/employees/requests" component={EmployerManageEmployeeAccountRequestsPage} />
             <EmployerOnlyRoute exact path="/balances" component={EmployerBalancesPage} />
-          </Layout.Desktop.Private>
+          </Layout.Private>
         </Switch>
       </Router>
       <ResizeListener />

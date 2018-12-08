@@ -8,6 +8,7 @@ const ResizeListener = ({ dispatch, layout }) => {
     const tablet = window.innerWidth > 480 && window.innerWidth <= 1024
     const desktop = window.innerWidth > 1024
     const type = (mobile ? 'mobile' : (tablet ? 'tablet' : (desktop ? 'desktop' : null)))
+    document.body.className = type[0].toUpperCase() + type.substring(1)
     if (type !== layout.type) dispatch({ type: 'LAYOUT_UPDATE_TYPE', payload: { type } })
   }
   useEffect(() => window.addEventListener('resize', resize),

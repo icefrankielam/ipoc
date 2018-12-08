@@ -12,6 +12,7 @@ import {
 } from '@/constructors/contracts'
 
 import Button from '@/components/Button'
+import DetailRow from '@/components/DetailRow'
 
 import './RequestInstapayForm.sass'
 
@@ -73,16 +74,24 @@ const RequestInstapayForm = ({ history, data }) => {
 
         return (
           <div className="RequestInstapayForm">
-            Next Paycheck: {moment().add(payableDays, 'd').format('YYYY-MM-DD')}, {payableDays} work days from now
+            <DetailRow label={'Next Paycheck'}>
+              {moment().add(payableDays, 'd').format('YYYY-MM-DD')} ({payableDays} work days from now)
+            </DetailRow>
+            
             <br /> 
-
-            Available Wages: ${availableWages} DAI
+            <DetailRow label={'Available Wages'}>
+              ${availableWages} DAI
+            </DetailRow>
             <br />
 
-            Fee: ${FEE} DAI
+            <DetailRow label={'Fee'}>
+              ${FEE} DAI
+            </DetailRow>
             <br />
 
-            I get: ${loanAmount} DAI
+            <DetailRow>
+              I get: ${loanAmount} DAI
+            </DetailRow>
             <br />
 
             <Button
@@ -111,7 +120,9 @@ const RequestInstapayForm = ({ history, data }) => {
             />
 
             <br />
-            {lastTransaction ? <a target="_blank" href={`https://ropsten.etherscan.io/tx/${lastTransaction}`}>{JSON.stringify(lastTransaction)}</a> : null}
+            <DetailRow>
+              {lastTransaction ? <a target="_blank" href={`https://ropsten.etherscan.io/tx/${lastTransaction}`}>{JSON.stringify(lastTransaction)}</a> : null}
+            </DetailRow>
 
           </div>
         )

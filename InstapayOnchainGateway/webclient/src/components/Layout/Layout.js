@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import MobileHeader from '@/components/MobileHeader'
-import MobileFooter from '@/components/MobileFooter'
-import DesktopHeader from '@/components/DesktopHeader'
-import DesktopFooter from '@/components/DesktopFooter'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
 import './Layout.sass'
 
@@ -15,25 +13,11 @@ class Layout extends Component {
   }  
 }
 
-class MobilePrivate extends Component {
+class Private extends Component {
   render() {
     return (
-      <Layout className="MobilePrivate">
-        <MobileHeader.Private />
-        <div className="Main">
-          {this.props.children}
-        </div>
-        <MobileFooter />
-      </Layout>
-    )
-  }
-}
-
-class MobilePublic extends Component {
-  render() {
-    return (
-      <Layout className="MobilePublic">
-        <MobileHeader.Public />
+      <Layout className="Private">
+        <Header.Private />
         <div className="Main">
           {this.props.children}
         </div>
@@ -42,28 +26,15 @@ class MobilePublic extends Component {
   }
 }
 
-class DesktopPrivate extends Component {
+class Public extends Component {
   render() {
     return (
-      <Layout className="DesktopPrivate">
-        <DesktopHeader.Private />
+      <Layout className="Public">
+        <Header.Public />
         <div className="Main">
           {this.props.children}
         </div>
-      </Layout>
-    )
-  }
-}
-
-class DesktopPublic extends Component {
-  render() {
-    return (
-      <Layout className="DesktopPublic">
-        <DesktopHeader.Public />
-        <div className="Main">
-          {this.props.children}
-        </div>
-        <DesktopFooter />
+        <Footer />
       </Layout>
     )
   }
@@ -71,12 +42,6 @@ class DesktopPublic extends Component {
 
 
 export default {
-  Mobile: {
-    Private: MobilePrivate,
-    Public: MobilePublic,
-  },
-  Desktop: {
-    Private: DesktopPrivate,
-    Public: DesktopPublic,
-  },
+  Private,
+  Public,
 }

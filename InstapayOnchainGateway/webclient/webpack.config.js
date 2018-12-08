@@ -27,9 +27,11 @@ const config = {
     headers: { 'Access-Control-Allow-Origin': '*' },
     port: 8080,
     public: 'localhost',
+    hot: true,
     proxy: {
       '/api': `${IPOC_GATEWAY_URL}`,
       '/graphql': `${IPOC_GATEWAY_URL}`,
+      '/static': `${IPOC_GATEWAY_URL}`,
       '/socket.io': `${IPOC_GATEWAY_URL}`,
     },
   },

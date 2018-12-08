@@ -10,25 +10,10 @@ import ReactSelect from 'react-select'
 import apollo from '@/constructors/apollo'
 import SettingsRow from '@/components/SettingsRow'
 import Button from '@/components/Button'
+import Row from '@/components/Row'
+import DetailRow from '@/components/DetailRow'
 
 import './PaycheckInfo.sass'
-
-
-const Row = ({ children }) => (
-  <div className="Row">
-    {children}
-  </div>
-)
-
-const DetailRow = ({ value, label, children }) => (
-  <div className="DetailRow">
-    <div className="DetailRowLabel">
-      {label}
-    </div>
-    {value ? <div className="DetailRowValue">{value}</div> : null}
-    {children}
-  </div>
-)
 
 const InlineInput = ({
   className = null,
@@ -97,7 +82,7 @@ const EmployerRow = ({ employer, employers, status }) => {
           <DetailRow
             label={
               <>
-                Employer
+                <span style={{ marginRight: '1em' }}>Employer</span>
                   {editMode ? (
                     path(['value'], localEmployer) ? (
                       <Button
@@ -123,7 +108,7 @@ const EmployerRow = ({ employer, employers, status }) => {
               </>
             }
           >
-            {content} {status || null}
+            {content} {`(${status})` || null}
           </DetailRow>
         )
       }}
@@ -153,8 +138,7 @@ const WalletRow = ({ me }) => {
       awaitRefetchQueries
     >
       {(updateUser, { data, error }) => (
-        <div className="WalletRow">
-          My Wallet:
+        <DetailRow className="WalletRow" label="My Wallet">
           <input
             type="text"
             readOnly={!editWalletMode}
@@ -170,7 +154,7 @@ const WalletRow = ({ me }) => {
               <MdSave />
             </Button>
           ) : <Button onClick={() => setEditWalletMode(true)}><MdModeEdit /></Button>}
-        </div>
+        </DetailRow>
       )}
     </Mutation>
   )
@@ -196,15 +180,14 @@ const WagesRow = ({ me }) => {
       awaitRefetchQueries
     >
       {(updateUser, { data, error }) => (
-        <div className="WalletRow">
-          My Daily Wages:
+        <DetailRow className="WagesRow" label="My Daily Wages (DAI)">
           <input
             type="text"
             readOnly={!editWagesMode}
             value={wagesPerDay}
             style={{ width: '370px' }}
             onChange={e => setWagesPerDay(e.target.value)}
-          /> DAI
+          />
           {editWagesMode ? (
             <Button onClick={() => {
               updateUser({ variables: { wagesPerDay: parseInt(wagesPerDay, 10) } })
@@ -213,7 +196,7 @@ const WagesRow = ({ me }) => {
               <MdSave />
             </Button>
           ) : <Button onClick={() => setEditWagesMode(true)}><MdModeEdit /></Button>}
-        </div>
+        </DetailRow>
       )}
     </Mutation>
   )
@@ -229,16 +212,14 @@ const PaycheckInfo = (props) => {
     myLinkEmployerRequest,
   } = data
 
-  console.log(data)
-
   if (loading) return '...loading...'
 
   return (
     <div className="PaycheckInfo">
-      My current balance: ${me.balance} DAI
+      <DetailRow label={'My Balance'} value={`$${me.balance} DAI`} />
       <WalletRow me={me} />
       <WagesRow me={me} />
-      <EmployerRow employer={myEmployer} employers={employers} status={myLinkEmployerRequest.status} />
+      <EmployerRow employer={myEmployer} employers={employers} status={myLinkEmployerRequest && myLinkEmployerRequest.status} />
     </div>
   )
 }

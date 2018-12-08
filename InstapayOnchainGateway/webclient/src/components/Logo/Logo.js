@@ -6,7 +6,7 @@ import './Logo.sass'
 
 const Logo = ({ history }) => (
   <div className="Logo" onClick={() => history.push('/')}>
-    InstapayOnchain
+    <img src="/static/logo.png" />
   </div>
 )
 
