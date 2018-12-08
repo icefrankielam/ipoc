@@ -1,0 +1,15 @@
+{
+  "express": {
+    "apollo-server-express": true,
+    "express-session": {
+        "redis": false,
+        "postgres": true
+    },
+    "postgres": true,
+    "redis": false,
+    "routes": true,
+    "sequelize": true,
+    "sockets": false
+  },
+  "web3": true
+}

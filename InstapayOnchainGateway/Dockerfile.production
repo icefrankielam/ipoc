@@ -1,0 +1,32 @@
+# Build webclient
+FROM node as builder
+MAINTAINER Shain Lafazan
+
+RUN apt-get update
+
+WORKDIR /usr/share/webclient
+
+RUN mkdir -p /usr/share/
+
+ADD ./webclient /usr/share/webclient
+
+RUN yarn setup
+RUN yarn build
+
+# Run gateway
+FROM node as runner
+
+RUN apt-get update
+
+RUN mkdir -p /app
+
+ADD ./gateway ./app
+
+WORKDIR /app
+
+RUN yarn setup
+
+RUN mkdir -p /app/static/
+COPY --from=builder /usr/share/webclient/dist /app/static
+
+CMD yarn start

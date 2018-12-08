@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -f ./Dockerfile.production -t $IPOC_IMAGE_REPO_NAME:$IPOC_IMAGE_TAG .
+      - docker tag $IPOC_IMAGE_REPO_NAME:$IPOC_IMAGE_TAG $IPOC_AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IPOC_IMAGE_REPO_NAME:$IPOC_IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image to ECR Repo...
+      - docker push $IPOC_AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IPOC_IMAGE_REPO_NAME:$IPOC_IMAGE_TAG
+      - printf '[{"name":"%s","imageUri":"%s"}]' gateway $IPOC_AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IPOC_IMAGE_REPO_NAME:$IPOC_IMAGE_TAG > imagedefinitions.json
+      - cat imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json
+
+# cache:
+#   paths:

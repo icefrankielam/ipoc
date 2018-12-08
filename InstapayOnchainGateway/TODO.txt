@@ -1,0 +1,5 @@
+- Investment Pool Contract
+  - Fund contract with Eth
+- Status (get wallet address)
+- Web User Interface (wallet)
+- Web gateway (just for sending webclient, making kyber swap)

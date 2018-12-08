@@ -1,0 +1,50 @@
+version: '2'
+
+services:
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./tmp/pgdata:/var/lib/postgresql/data
+
+  gateway:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.production
+    command: yarn start
+    ports:
+      - "8000:8000"
+    environment:
+      NODE_ENV: production
+      IPOC_EXPRESS_PORT: 8000
+      IPOC_EXPRESS_SESSION_SECRET: 'keyboard cat'
+      IPOC_POSTGRES_USER: postgres
+      IPOC_POSTGRES_PORT: 5432
+      IPOC_POSTGRES_HOST: postgres
+      IPOC_POSTGRES_PASSWORD: password
+      IPOC_POSTGRES_DATABASE: postgres
+      IPOC_LIQUIDITY_POOL_CONTRACT_ADDRESS_MAINNET: ''
+      IPOC_POLICY_TEMPLATE_V1_CONTRACT_ADDRESS_MAINNET: ''
+      IPOC_POLICY_ORACLE_V1_CONTRACT_ADDRESS_MAINNET: ''
+      IPOC_LIQUIDITY_POOL_CONTRACT_ADDRESS_ROPSTEN: '0x1d7dC5F47d1Cce7E8a7265d57a1535F572620ebE'
+      IPOC_POLICY_TEMPLATE_V1_CONTRACT_ADDRESS_ROPSTEN: '0xabeaa785d61b288566cdd27e1c0305edd8829603'
+      IPOC_POLICY_ORACLE_V1_CONTRACT_ADDRESS_ROPSTEN: '0x08D4d29340D5fC27F76B12941EC2289432AFfE33'
+      IPOC_ETH_NETWORK: mainnet
+      IPOC_ETH_ACCOUNT: '0xa9Af3D88E5167cA6E9413CBB9b946EC95FE469ee'
+      IPOC_ETH_PRIVATE_KEY: ''
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PUSH_SUBSCRIPTION_ENCRYPTION_KEY: push_subscription_key
+      WS_GETH_URL: https://ropsten.infura.io/v3/bb33dcb7a6b94ab4a66d33d12ec0c53e
+    depends_on:
+      - postgres
+      - redis
+
+  redis:
+    image: redis
+    ports:
+        - "6379:6379"

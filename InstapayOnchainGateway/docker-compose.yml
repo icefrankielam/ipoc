@@ -1,0 +1,61 @@
+version: '2'
+
+services:
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./tmp/pgdata:/var/lib/postgresql/data
+
+  webclient:
+    build: ./webclient
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: development
+      IPOC_GATEWAY_URL: http://gateway:8000
+    volumes:
+      - ./webclient:/app
+      - /app/node_modules # protect container node_modules from overwrite
+
+  gateway:
+    build: ./gateway
+    command: yarn dev
+    ports:
+      - "8000:8000"
+    environment:
+      NODE_ENV: development
+      IPOC_EXPRESS_PORT: 8000
+      IPOC_EXPRESS_SESSION_SECRET: 'keyboard cat'
+      IPOC_POSTGRES_USER: postgres
+      IPOC_POSTGRES_HOST: postgres
+      IPOC_POSTGRES_DATABASE: postgres
+      IPOC_POSTGRES_PASSWORD: password
+      IPOC_POSTGRES_PORT: 5432
+      # mainnet contracts
+      IPOC_LIQUIDITY_POOL_CONTRACT_ADDRESS_MAINNET: ''
+      # ropsten contracts
+      IPOC_LIQUIDITY_POOL_CONTRACT_ADDRESS_ROPSTEN: '0x4e3a2De87211b4aCB7af837f39F9F1C924449d5F'
+      IPOC_ETH_NETWORK: ropsten
+      IPOC_ETH_ACCOUNT: '0xa9Af3D88E5167cA6E9413CBB9b946EC95FE469ee'
+      IPOC_ETH_PRIVATE_KEY: ''
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PUSH_SUBSCRIPTION_ENCRYPTION_KEY: push_subscription_key
+      WS_GETH_URL: https://ropsten.infura.io/v3/bb33dcb7a6b94ab4a66d33d12ec0c53e
+      # WS_GETH_URL: ws://docker.for.mac.localhost:8546/
+      # WS_GETH_URL: wss://ropsten.infura.io/ws/v3/bb33dcb7a6b94ab4a66d33d12ec0c53e
+    depends_on:
+      - postgres
+    volumes:
+      - ./gateway:/app
+      - /app/node_modules # protect container node_modules from overwrite
+
+  # redis:
+  #   image: redis
+  #   ports:
+  #       - "6379:6379"
