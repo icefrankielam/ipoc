@@ -84,7 +84,7 @@ const InvestPage = props => {
                 const priceWei = window.web3.toWei(amount)
                 const web3walletArray = await getWeb3Wallet()
                 const web3wallet = web3walletArray[0]
-                InstaPoolPayContract.stablize(
+                InstaPoolPayContract.stabilize(
                   (err, tx) => {
                     if (err) {
                       log.info(err)
