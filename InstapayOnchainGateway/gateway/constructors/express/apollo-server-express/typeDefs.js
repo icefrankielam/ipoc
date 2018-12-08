@@ -118,6 +118,7 @@ module.exports = `
 
     createInstapay: EthTransactionResponse @AuthorizedUser
     repay(userId: Int): EthTransactionResponse @AuthorizedUser
+    fund(amount: Int): EthTransactionResponse
 
     updateUser(employerId: Int, wallet: String, wagesPerDay: Int): User @AuthorizedUser
     createLinkEmployeeToEmployerRequest(employerId: Int): LinkEmployeeToEmployerRequest @AuthorizedUser

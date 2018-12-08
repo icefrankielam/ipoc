@@ -6,18 +6,19 @@ const Kyber = require('@/constructors/kyber')
 
 const kyber = new Kyber({ network: process.env.IPOC_ETH_NETWORK })
 
-const ipocLiquidityPoolContractABI = require('./InstapayOnchainLiquidityPool/abi.json')
+const instaPayPoolContractABI = require('./InstaPayPool/abi.json')
 
 const networkAddressMap = {
   mainnet: {
-    InstapayOnchainLiquidityPool: process.env.IPOC_LIQUIDITY_POOL_CONTRACT_ADDRESS_MAINNET,
+    InstaPayPool: process.env.IPOC_INSTAPAY_POOL_CONTRACT_ADDRESS_MAINNET,
   },
   ropsten: {
-    InstapayOnchainLiquidityPool: process.env.IPOC_LIQUIDITY_POOL_CONTRACT_ADDRESS_ROPSTEN,
+    InstaPayPool: process.env.IPOC_INSTAPAY_POOL_CONTRACT_ADDRESS_ROPSTEN,
   },
 }
 
-const ipocLiquidityPoolContract = new web3.eth.Contract(ipocLiquidityPoolContractABI, networkAddressMap[process.env.IPOC_ETH_NETWORK].InstapayOnchainLiquidityPool)
+
+const instaPayPoolContract = new web3.eth.Contract(instaPayPoolContractABI, networkAddressMap[process.env.IPOC_ETH_NETWORK].InstaPayPool)
 
 
 const getNonce = address => {
@@ -79,11 +80,75 @@ const getGasPrice = async () => {
 
 
 
-const createInstapay = async ({ amount }) => {
+const loan = async ({ borrowerAddress, amount }) => {
   try {
-    // const txBuilder = ipocLiquidityPoolContract.methods.createInstapay(
-    //   web3.eth.abi.encodeParameter('uint256', 100),
-    // )
+    console.log('borrowerAddress: ', borrowerAddress)
+    console.log('amount: ', amount)
+    const weiAmount = web3.utils.toWei(amount.toString())
+    console.log('weiAmount: ', weiAmount)
+    const borrowerAddressEncoded = web3.eth.abi.encodeParameter('address', borrowerAddress)
+    const weiAmountEncoded = web3.eth.abi.encodeParameter('uint256', weiAmount)
+    console.log('borrowerAddressEncoded: ', borrowerAddressEncoded)
+    console.log('weiAmountEncoded: ', weiAmountEncoded)
+    const txBuilder = instaPayPoolContract.methods.loan(
+      borrowerAddress,
+      weiAmount
+    )
+    const account = web3.eth.accounts.privateKeyToAccount('0x' + process.env.IPOC_ETH_PRIVATE_KEY)
+    console.log('account: ', account)
+    web3.eth.accounts.wallet.add(account)
+    const nonce = await getNonce(process.env.IPOC_ETH_ACCOUNT)
+    console.log('nonce: ', nonce)
+
+    const bal = await web3.eth.getBalance(web3.eth.accounts.wallet[0].address)
+    console.log('balance: ', bal)
+
+    const gasPrice = await getGasPrice()
+    console.log('gasPrice: ', gasPrice)
+
+    const txObject = {
+      gas: web3.utils.toHex(2e5),
+      gasPrice: web3.utils.toHex(gasPrice),
+      data: txBuilder.encodeABI(),
+      from: account.address,
+      to: instaPayPoolContract._address,
+      nonce: web3.utils.toHex(nonce),
+      chainId: 3,
+    }
+
+    const rawTx = new Tx(txObject)
+    console.log('rawTx: ', rawTx)
+    rawTx.sign(new Buffer.from(process.env.IPOC_ETH_PRIVATE_KEY, 'hex'))
+    const serializedTx = rawTx.serialize()
+    console.log('serializedTx: ', serializedTx)
+    const hexTx = serializedTx.toString('hex')
+    console.log('hexTx: ', hexTx)
+    const prefixedTx = '0x' + hexTx
+    console.log('prefixedTx: ', prefixedTx)
+    const tx = await web3.eth.sendSignedTransaction(prefixedTx)
+    console.log('[utils][contracts][loan] tx: ', Object.keys(tx))
+    return tx
+  } catch (error) {
+    console.error(error)
+    console.log('error.name', error.name)
+    console.log('error.message', error.message)
+    // console.log('\n\n retry \n\n')
+    // if (true /* TODO - is "connection not open" */) {
+    //   setTimeout(() => loan({ amount, borrowerAddress }), 3000)
+    // }
+  }
+}
+
+
+
+const repay = async ({ amount, borrowerAddress }) => {
+  try {
+    console.log('amount: ', amount)
+    console.log('borrowerAddress: ', borrowerAddress)
+    const txBuilder = instaPayPoolContract.methods.repay(
+      borrowerAddress,
+      web3.eth.abi.encodeParameter('uint256', web3.utils.toWei(amount.toString())) // BN
+    )
     const account = web3.eth.accounts.privateKeyToAccount('0x' + process.env.IPOC_ETH_PRIVATE_KEY)
 
     web3.eth.accounts.wallet.add(account)
@@ -95,50 +160,39 @@ const createInstapay = async ({ amount }) => {
     const gasPrice = await getGasPrice()
 
 
-    // const kyberSupportedTokens = await kyber.getSupportedTokens()
-    // console.log('kyber: ', kyber)
-    // const kyberDaiEntity = kyber.supportedTokens.find(entity => entity.symbol === 'DAI')
-    // console.log('kyberDaiEntity: ', kyberDaiEntity)
+    const txObject = {
+      gas: web3.utils.toHex(2e5),
+      gasPrice: web3.utils.toHex(gasPrice),
+      data: txBuilder.encodeABI(),
+      from: account.address,
+      to: instaPayPoolContract._address,
+      nonce: web3.utils.toHex(nonce),
+      chainId: 3,
+    }
 
-
-    // const txObject = {
-    //   gas: web3.utils.toHex(2e5),
-    //   gasPrice: web3.utils.toHex(gasPrice),
-    //   data: txBuilder.encodeABI(),
-    //   from: account.address,
-    //   to: ipocLiquidityPoolContract._address,
-    //   nonce: web3.utils.toHex(nonce),
-    //   chainId: 3,
-    // }
-
-    // const rawTx = new Tx(txObject)
-    // rawTx.sign(new Buffer.from(process.env.IPOC_ETH_PRIVATE_KEY, 'hex'))
-    // const serializedTx = rawTx.serialize()
-    // const hexTx = serializedTx.toString('hex')
-    // const prefixedTx = '0x' + hexTx
-    // const tx = await web3.eth.sendSignedTransaction(prefixedTx)
-    // console.log('[utils][contracts][createInstapay] transactionHash: ', tx.transactionHash)
-    // return tx
-    // return kyberDaiEntity
+    const rawTx = new Tx(txObject)
+    rawTx.sign(new Buffer.from(process.env.IPOC_ETH_PRIVATE_KEY, 'hex'))
+    const serializedTx = rawTx.serialize()
+    const hexTx = serializedTx.toString('hex')
+    const prefixedTx = '0x' + hexTx
+    const tx = await web3.eth.sendSignedTransaction(prefixedTx)
+    console.log('[utils][contracts][repay] transactionHash: ', tx.transactionHash)
+    return tx
     return null
   } catch (error) {
     console.error(error)
     console.log('error.name', error.name)
     console.log('error.message', error.message)
-    console.log('\n\n retry \n\n')
-    if (true /* TODO - is "connection not open" */) {
-      setTimeout(() => createInstapay({}), 3000)
-    }
+    // console.log('\n\n retry \n\n')
+    // if (true /* TODO - is "connection not open" */) {
+    //   setTimeout(() => repay({ borrowerAddress, amount }), 3000)
+    // }
   }
 }
 
-
-
-const repay = async ({}) => {
+const stabilize = async ({}) => {
   try {
-    // const txBuilder = ipocLiquidityPoolContract.methods.createInstapay(
-    //   web3.eth.abi.encodeParameter('uint256', 100),
-    // )
+    const txBuilder = instaPayPoolContract.methods.stabilize()
     const account = web3.eth.accounts.privateKeyToAccount('0x' + process.env.IPOC_ETH_PRIVATE_KEY)
 
     web3.eth.accounts.wallet.add(account)
@@ -150,48 +204,91 @@ const repay = async ({}) => {
     const gasPrice = await getGasPrice()
 
 
-    // const kyberSupportedTokens = await kyber.getSupportedTokens()
-    // console.log('kyber: ', kyber)
-    // const kyberDaiEntity = kyber.supportedTokens.find(entity => entity.symbol === 'DAI')
-    // console.log('kyberDaiEntity: ', kyberDaiEntity)
+    const txObject = {
+      gas: web3.utils.toHex(2e5),
+      gasPrice: web3.utils.toHex(gasPrice),
+      data: txBuilder.encodeABI(),
+      from: account.address,
+      to: instaPayPoolContract._address,
+      nonce: web3.utils.toHex(nonce),
+      chainId: 3,
+    }
 
-
-    // const txObject = {
-    //   gas: web3.utils.toHex(2e5),
-    //   gasPrice: web3.utils.toHex(gasPrice),
-    //   data: txBuilder.encodeABI(),
-    //   from: account.address,
-    //   to: ipocLiquidityPoolContract._address,
-    //   nonce: web3.utils.toHex(nonce),
-    //   chainId: 3,
-    // }
-
-    // const rawTx = new Tx(txObject)
-    // rawTx.sign(new Buffer.from(process.env.IPOC_ETH_PRIVATE_KEY, 'hex'))
-    // const serializedTx = rawTx.serialize()
-    // const hexTx = serializedTx.toString('hex')
-    // const prefixedTx = '0x' + hexTx
-    // const tx = await web3.eth.sendSignedTransaction(prefixedTx)
-    // console.log('[utils][contracts][createInstapay] transactionHash: ', tx.transactionHash)
-    // return tx
-    // return kyberDaiEntity
+    const rawTx = new Tx(txObject)
+    rawTx.sign(new Buffer.from(process.env.IPOC_ETH_PRIVATE_KEY, 'hex'))
+    const serializedTx = rawTx.serialize()
+    const hexTx = serializedTx.toString('hex')
+    const prefixedTx = '0x' + hexTx
+    const tx = await web3.eth.sendSignedTransaction(prefixedTx)
+    console.log('[utils][contracts][stabilize] transactionHash: ', tx.transactionHash)
+    return tx
     return null
   } catch (error) {
     console.error(error)
     console.log('error.name', error.name)
     console.log('error.message', error.message)
-    console.log('\n\n retry \n\n')
-    if (true /* TODO - is "connection not open" */) {
-      setTimeout(() => createInstapay({}), 3000)
-    }
+    // console.log('\n\n retry \n\n')
+    // if (true /* TODO - is "connection not open" */) {
+    //   setTimeout(() => stabilize({}), 3000)
+    // }
   }
 }
+
+
+const fund = async ({ amount }) => {
+  try {
+    const txBuilder = instaPayPoolContract.methods.fund(
+      web3.eth.abi.encodeParameter('uint256', amount * Math.pow(10, 18)) // BN
+    )
+    const account = web3.eth.accounts.privateKeyToAccount('0x' + process.env.IPOC_ETH_PRIVATE_KEY)
+
+    web3.eth.accounts.wallet.add(account)
+    const nonce = await getNonce(process.env.IPOC_ETH_ACCOUNT)
+
+    // const bal = await web3.eth.getBalance(web3.eth.accounts.wallet[0].address)
+    // console.log('balance: ', bal)
+
+    const gasPrice = await getGasPrice()
+
+
+    const txObject = {
+      gas: web3.utils.toHex(2e5),
+      gasPrice: web3.utils.toHex(gasPrice),
+      data: txBuilder.encodeABI(),
+      from: account.address,
+      to: instaPayPoolContract._address,
+      nonce: web3.utils.toHex(nonce),
+      chainId: 3,
+    }
+
+    const rawTx = new Tx(txObject)
+    rawTx.sign(new Buffer.from(process.env.IPOC_ETH_PRIVATE_KEY, 'hex'))
+    const serializedTx = rawTx.serialize()
+    const hexTx = serializedTx.toString('hex')
+    const prefixedTx = '0x' + hexTx
+    const tx = await web3.eth.sendSignedTransaction(prefixedTx)
+    console.log('[utils][contracts][fund] transactionHash: ', tx.transactionHash)
+    return tx
+    return null
+  } catch (error) {
+    console.error(error)
+    console.log('error.name', error.name)
+    console.log('error.message', error.message)
+    // console.log('\n\n retry \n\n')
+    // if (true /* TODO - is "connection not open" */) {
+    //   setTimeout(() => fund({}), 3000)
+    // }
+  }
+}
+
 
 
 
 module.exports = {
   getNonce,
-  ipocLiquidityPoolContract,
-  createInstapay,
+  instaPayPoolContract,
+  loan,
   repay,
+  stabilize,
+  fund,
 }

@@ -1,6 +1,16 @@
 # IPOC: Insta-Pay On Chain
 
-## Payday loan on chain
+## a.k.a. Payday loan on chain
+
+InstaPayPool Contract
+- Main net: https://etherscan.io/address/0x3D18f83BedC73F2730Cf179214976e3C6aaB06C3
+- Ropsten: https://ropsten.etherscan.io/address/0x730666Fd1409Da3F6d51752C475fDA0934E634E2
+- (OUTDATED Ropsten: https://ropsten.etherscan.io/address/0x74506c5651b4e496b369fa4ebdd9422629a0d838 )
+- Interface:
+  - function fund() external payable {}
+  - function stablize() public onlyOwner returns(bool success) {}
+  - function loan(address \_borrower, uint \_amount) public onlyOwner returns(bool success) {}
+  - function repay(address \_borrower, uint \_amount) public onlyOwner {}
 
 ### Employee (in DAI ONLY)
 - Create account on **Status** (Ropsten)
@@ -14,15 +24,16 @@
 - Outstanding loan? Paycheck pays back loan (reserve pool contract), remaining amount goes to employee, otherwise goes to employee as usual (employee = employee Status account)
 - *(Can work without payroll integration, integration assumed in this hackathon)*
 
-### Pool (in ETH ONLY)
+### Pool (invest in ETH ONLY and convert to DAI)
 - Initial reserve pool provided by **IPOC** investors in **ETH** stored in Smart Contract (Solidity)
+- ETH in pool will be converted to DAI via `stablize()` call
 - Threshold: raise fixed amount (e.g. 50% pool size) via loan when balance is below threshold (50%)
 - Submit debt order when below threshold (handled by server), loan amount in ETH goes straight to Smart Contract
-- Handles loan repayment on loan due day
-- Paycheck loan payback goes directly to reserve pool smart contract
+- Handles loan repayment on loan due day (NOT implemented)
+- Paycheck loan payback goes directly to reserve pool smart contract (NOT implemented)
 
 ### Investors (in ETH ONLY)
-- Fund loan orders submitted to relay (via Dharma) (NOT implemented)
+- Fund loan orders submitted to relay (via Dharma) (Dharma portion NOT implemented)
 
 ### Pool Investment
 - Pool money can be invested to earn interest? (NOT implemented)

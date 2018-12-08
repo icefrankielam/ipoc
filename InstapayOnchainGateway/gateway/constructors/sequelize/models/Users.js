@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    balance: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
     phone: {
       type: DataTypes.STRING,
       allowNull: true,

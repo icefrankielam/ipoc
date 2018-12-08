@@ -15,6 +15,7 @@ class PublicDesktopHeader extends Component {
       <header className="DesktopHeader">
         <Logo />
         <ul className="DesktopHeaderRoutes">
+          <li className="DesktopHeaderRoute"><Link to={'/invest'}>Invest</Link></li>
           <li className="DesktopHeaderRoute"><Link to={'/login'}>Login</Link></li>
           <li className="DesktopHeaderRoute"><Link to={'/register'}>Register</Link></li>
         </ul>
@@ -43,6 +44,7 @@ class PrivateDesktopHeader extends Component {
     const userRoutes = () => (
       <ul className="DesktopHeaderRoutes">
         <li className="DesktopHeaderRoute"><Link to={'/'}>Dashboard</Link></li>
+        <li className="DesktopHeaderRoute"><Link to={'/invest'}>Invest</Link></li>
         <li className="DesktopHeaderRoute"><Link to={'/settings'}>Settings</Link></li>
       </ul>
     )
