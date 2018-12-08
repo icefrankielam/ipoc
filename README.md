@@ -1,2 +1,28 @@
-# ipoc
-Insta-Pay On Chain
+# IPOC: Insta-Pay On Chain
+
+## Payday loan on chain
+
+### Employee (in DAI ONLY)
+- Create account on **Status** (Ropsten)
+- Employee can get Insta-Pay for all the salary they already earned with a low fee and low interest
+- Employee can loan up to the amount of every paycheck with low fee low interest
+- Loan gets paid in **DAI** (TODO: support fiat via **Wyre** integration)
+- Term: less than 15 days (pay back next paycheck, payroll period < 15 days in USA)
+
+### Employer (Fiat to DAI)
+- **IPOC** handles payroll
+- Outstanding loan? Paycheck pays back loan (reserve pool contract), remaining amount goes to employee, otherwise goes to employee as usual (employee = employee Status account)
+- *(Can work without payroll integration, integration assumed in this hackathon)*
+
+### Pool (in ETH ONLY)
+- Initial reserve pool provided by **IPOC** investors in **ETH** stored in Smart Contract (Solidity)
+- Threshold: raise fixed amount (e.g. 50% pool size) via loan when balance is below threshold (50%)
+- Submit debt order when below threshold (handled by server), loan amount in ETH goes straight to Smart Contract
+- Handles loan repayment on loan due day
+- Paycheck loan payback goes directly to reserve pool smart contract
+
+### Investors (in ETH ONLY)
+- Fund loan orders submitted to relay (via Dharma) (NOT implemented)
+
+### Pool Investment
+- Pool money can be invested to earn interest? (NOT implemented)
