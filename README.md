@@ -1,9 +1,14 @@
 # IPOC: Insta-Pay On Chain
 
-## A.k.a. Payday loan on chain
+## a.k.a. Payday loan on chain
 
 InstaPayPool Contract
 - Ropsten: https://ropsten.etherscan.io/address/0x74506c5651b4e496b369fa4ebdd9422629a0d838
+- Interface:
+  - function fund() external payable {}
+  - function stablize() public onlyOwner returns(bool success) {}
+  - function loan(address \_borrower, uint \_amount) public onlyOwner returns(bool success) {}
+  - function repay(address \_borrower, uint \_amount) public onlyOwner {}
 
 ### Employee (in DAI ONLY)
 - Create account on **Status** (Ropsten)
