@@ -9,7 +9,7 @@ import './DesktopFooter.sass'
 const DesktopFooter = ({ history, match }) => {
   return (
     <footer className="DesktopFooter">
-      <a href="https://ropsten.etherscan.io/address/0x730666Fd1409Da3F6d51752C475fDA0934E634E2" target="_blank">View InstaPayPool</a>
+      <a href="https://ropsten.etherscan.io/address/0x730666fd1409da3f6d51752c475fda0934e634e2" target="_blank">View InstaPayPool</a>
     </footer>
   )
 }
