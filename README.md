@@ -22,7 +22,7 @@ InstaPayPool Contract
 - Outstanding loan? Paycheck pays back loan (reserve pool contract), remaining amount goes to employee, otherwise goes to employee as usual (employee = employee Status account)
 - *(Can work without payroll integration, integration assumed in this hackathon)*
 
-### Pool (invest in ETH ONLY, will convert to DAI)
+### Pool (invest in ETH ONLY and convert to DAI)
 - Initial reserve pool provided by **IPOC** investors in **ETH** stored in Smart Contract (Solidity)
 - ETH in pool will be converted to DAI via `stablize()` call
 - Threshold: raise fixed amount (e.g. 50% pool size) via loan when balance is below threshold (50%)
