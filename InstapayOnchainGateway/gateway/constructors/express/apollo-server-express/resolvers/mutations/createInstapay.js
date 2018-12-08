@@ -28,10 +28,10 @@ module.exports = async (_, properties, { redis, res, session, models, user }) =>
     const availableWages = getPayableDays() * user.wagesPerDay
 
     const amount = availableWages - FEE
-    const pay = await loan({ borrowerAddress: user.wallet, amount })
-    console.log(pay)
+    const loanTransaction = await loan({ borrowerAddress: user.wallet, amount })
+    console.log('loanTransaction: ', loanTransaction)
 
-    return { status: 'hello' }
+    return loanTransaction
   } catch (e) {
     throw e
   }

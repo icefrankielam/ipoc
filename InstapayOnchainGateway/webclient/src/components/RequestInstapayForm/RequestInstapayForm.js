@@ -75,6 +75,9 @@ const RequestInstapayForm = ({ history, data }) => {
               children={'Pay Me Now'}
             />
 
+            <br />
+            {data ? <a href={`https://ropsten.etherscan.io/tx/${data.transactionHash}`}>{JSON.stringify(data.transactionHash)}</a> : null}
+
           </div>
         )
       }}

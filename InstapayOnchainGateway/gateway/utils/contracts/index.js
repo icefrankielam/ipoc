@@ -84,15 +84,15 @@ const loan = async ({ borrowerAddress, amount }) => {
   try {
     console.log('borrowerAddress: ', borrowerAddress)
     console.log('amount: ', amount)
-    const amountString = web3.utils.toWei(amount.toString())
-    console.log('amountString: ', amountString)
+    const weiAmount = web3.utils.toWei(amount.toString())
+    console.log('weiAmount: ', weiAmount)
     const borrowerAddressEncoded = web3.eth.abi.encodeParameter('address', borrowerAddress)
-    const amountStringEncoded = web3.eth.abi.encodeParameter('uint256', amountString)
+    const weiAmountEncoded = web3.eth.abi.encodeParameter('uint256', weiAmount)
     console.log('borrowerAddressEncoded: ', borrowerAddressEncoded)
-    console.log('amountStringEncoded: ', amountStringEncoded)
+    console.log('weiAmountEncoded: ', weiAmountEncoded)
     const txBuilder = instaPayPoolContract.methods.loan(
       borrowerAddress,
-      amountStringEncoded
+      weiAmount
     )
     const account = web3.eth.accounts.privateKeyToAccount('0x' + process.env.IPOC_ETH_PRIVATE_KEY)
     console.log('account: ', account)
@@ -120,20 +120,22 @@ const loan = async ({ borrowerAddress, amount }) => {
     console.log('rawTx: ', rawTx)
     rawTx.sign(new Buffer.from(process.env.IPOC_ETH_PRIVATE_KEY, 'hex'))
     const serializedTx = rawTx.serialize()
+    console.log('serializedTx: ', serializedTx)
     const hexTx = serializedTx.toString('hex')
+    console.log('hexTx: ', hexTx)
     const prefixedTx = '0x' + hexTx
+    console.log('prefixedTx: ', prefixedTx)
     const tx = await web3.eth.sendSignedTransaction(prefixedTx)
-    console.log('[utils][contracts][loan] transactionHash: ', tx.transactionHash)
+    console.log('[utils][contracts][loan] tx: ', Object.keys(tx))
     return tx
-    return null
   } catch (error) {
     console.error(error)
     console.log('error.name', error.name)
     console.log('error.message', error.message)
-    console.log('\n\n retry \n\n')
-    if (true /* TODO - is "connection not open" */) {
-      setTimeout(() => loan({ amount, borrowerAddress }), 3000)
-    }
+    // console.log('\n\n retry \n\n')
+    // if (true /* TODO - is "connection not open" */) {
+    //   setTimeout(() => loan({ amount, borrowerAddress }), 3000)
+    // }
   }
 }
 
@@ -181,10 +183,10 @@ const repay = async ({ amount, borrowerAddress }) => {
     console.error(error)
     console.log('error.name', error.name)
     console.log('error.message', error.message)
-    console.log('\n\n retry \n\n')
-    if (true /* TODO - is "connection not open" */) {
-      setTimeout(() => repay({ borrowerAddress, amount }), 3000)
-    }
+    // console.log('\n\n retry \n\n')
+    // if (true /* TODO - is "connection not open" */) {
+    //   setTimeout(() => repay({ borrowerAddress, amount }), 3000)
+    // }
   }
 }
 
@@ -225,10 +227,10 @@ const stabilize = async ({}) => {
     console.error(error)
     console.log('error.name', error.name)
     console.log('error.message', error.message)
-    console.log('\n\n retry \n\n')
-    if (true /* TODO - is "connection not open" */) {
-      setTimeout(() => stabilize({}), 3000)
-    }
+    // console.log('\n\n retry \n\n')
+    // if (true /* TODO - is "connection not open" */) {
+    //   setTimeout(() => stabilize({}), 3000)
+    // }
   }
 }
 
@@ -272,10 +274,10 @@ const fund = async ({ amount }) => {
     console.error(error)
     console.log('error.name', error.name)
     console.log('error.message', error.message)
-    console.log('\n\n retry \n\n')
-    if (true /* TODO - is "connection not open" */) {
-      setTimeout(() => fund({}), 3000)
-    }
+    // console.log('\n\n retry \n\n')
+    // if (true /* TODO - is "connection not open" */) {
+    //   setTimeout(() => fund({}), 3000)
+    // }
   }
 }
 
