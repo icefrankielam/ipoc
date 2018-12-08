@@ -62,9 +62,9 @@ contract InstaPayPool is Ownable {
         uint maxDestAmount = MAX_DAI_AMOUNT;
         uint minConversionRate;
         uint newTokenCount;
-        address walletId = address(0);          // not using this param
+        address walletId = address(0);  // not using this param
         (minConversionRate,) = proxy.getExpectedRate(ETH, DAI, srcQty);
-        newTokenCount = proxy.trade(
+        newTokenCount = proxy.trade.value(srcQty)(
             ETH,
             srcQty,
             DAI,
