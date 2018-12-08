@@ -20,33 +20,44 @@ const networkAddressMap = {
 
 const instaPayPoolContract = new web3.eth.Contract(instaPayPoolContractABI, networkAddressMap[process.env.IPOC_ETH_NETWORK].InstaPayPool)
 
+// web3.eth.extend({
+//   property: 'txpool',
+//   methods: [{
+//     name: 'content',
+//     call: 'txpool_content',
+//   },{
+//     name: 'inspect',
+//     call: 'txpool_inspect',
+//   },{
+//     name: 'status',
+//     call: 'txpool_status',
+//   }],
+// })
 
 const getNonce = address => {
   // http://qnimate.com/calculating-nonce-for-raw-transactions-in-geth/
   return web3.eth.getTransactionCount(address).then(count => {
     console.log('[utils][contracts][getNonce] nonce count: ', count)
-    return count // TODO - get working, probably need geth node to sync fully
+    // return count // TODO - get working, probably need geth node to sync fully
     return new Promise((resolve, reject) => {
       try {
         const getPendingTxCount = () => web3.currentProvider.send({
-          method: 'txpool_inspect',
-          params: [],
+          method: 'eth_getTransactionCount',
+          params: [address, 'earliest'],
           jsonrpc: '2.0',
           id: new Date().getTime(),
-        }, (error, result) => {
-          console.log('[utils][contracts][getNonce] nonce result: ', result)
+        }, (error, response) => {
+          console.log('[utils][contracts][getNonce] nonce response: ', response)
           if (error) {
             console.log('[utils][contracts][getNonce] nonce error:', error)
             // continue even if error
           }
-          const good = result && result.result && result.result.pending
-          if (good && result.result.pending[address]) {
-            const pendingTxCount = Object.keys(result.result.pending[address]).length
-            console.log(`[utils][contracts][getNonce] ${pendingTxCount} pending transactions found!`)
-            resolve(count + pendingTxCount)
-          }
-          resolve(count)
+          const pendingTransactionsCount = web3.utils.hexToNumber(response.result)
+          console.log(`[utils][contracts][getNonce] ${pendingTransactionsCount} pending transactions found.`)
+          resolve(count + pendingTransactionsCount)
         })
+
+        return getPendingTxCount()
       } catch (error) {
         console.error(error)
         return resolve(count)
@@ -175,6 +186,7 @@ const repay = async ({ amount, borrowerAddress }) => {
     const serializedTx = rawTx.serialize()
     const hexTx = serializedTx.toString('hex')
     const prefixedTx = '0x' + hexTx
+    console.log('[utils][contracts][repay] prefixedTx: ', prefixedTx)
     const tx = await web3.eth.sendSignedTransaction(prefixedTx)
     console.log('[utils][contracts][repay] transactionHash: ', tx.transactionHash)
     return tx

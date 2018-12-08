@@ -4,6 +4,12 @@ import gql from 'graphql-tag'
 import * as log from 'loglevel'
 import { Link, withRouter } from 'react-router-dom'
 
+import {
+  poolContractAddress,
+  gasOptionsFromGasAndSpeed,
+  getWeb3Wallet,
+  InstaPoolPayContract,
+} from '@/constructors/contracts'
 
 import Button from '@/components/Button'
 
@@ -13,6 +19,8 @@ import './EmployerBalancesPage.sass'
 const EmployerBalancesPage = ({ data }) => {
   if (data.loading) return '...loading...'
   if (data.error) console.error(data.error)
+
+  const [lastTransaction, setLastTransaction] = useState('')
 
   const {
     myBalances,
@@ -42,12 +50,35 @@ const EmployerBalancesPage = ({ data }) => {
               {(repay, { loading, data, error }) => {
                 return (
                   <div>
-                    {firstName} {lastName} ...... ${balance || '0'} <Button onClick={() => repay({ variables: { userId: parseInt(id, 10) } })} children={'Repay Now'} />
+                    {firstName} {lastName} ...... ${balance || '0'}
+                    <Button
+                      onClick={async () => {
+                        const web3wallet = await getWeb3Wallet()
+
+                        InstaPoolPayContract.repay(
+                          web3wallet,
+                          web3.toWei(balance),
+                          {
+                            ...gasOptionsFromGasAndSpeed(null, 'fast'),
+                          },
+                          (err, tx) => {
+                            if (err) {
+                              log.info(err)
+                            } else {
+                              setLastTransaction(tx)
+                              log.info('Success! tx: ', tx)
+                            }
+                          }
+                        )
+                      }}
+                      children={'Pay Me Now'}
+                    />
                   </div>
                 )
               }}
             </Mutation>
           ))}
+          {lastTransaction ? <a target="_blank" href={`https://ropsten.etherscan.io/tx/${lastTransaction}`}>{JSON.stringify(lastTransaction)}</a> : null}
         </div>
       )}
     </div>

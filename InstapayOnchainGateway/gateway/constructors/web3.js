@@ -31,4 +31,5 @@ const Web3Provider = ({ socketAddress = `wss://${process.env.IPOC_ETH_NETWORK}.i
 
 
 // module.exports = Web3Provider({ socketAddress: process.env.WS_GETH_URL })
+console.log('process.env.WS_GETH_URL: ', process.env.WS_GETH_URL)
 module.exports = new Web3(new Web3.providers.HttpProvider(process.env.WS_GETH_URL))

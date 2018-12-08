@@ -120,7 +120,7 @@ module.exports = `
     repay(userId: Int): EthTransactionResponse @AuthorizedUser
     fund(amount: Int): EthTransactionResponse
 
-    updateUser(employerId: Int, wallet: String, wagesPerDay: Int): User @AuthorizedUser
+    updateUser(employerId: Int, wallet: String, wagesPerDay: Int, balance: Float): User @AuthorizedUser
     createLinkEmployeeToEmployerRequest(employerId: Int): LinkEmployeeToEmployerRequest @AuthorizedUser
     updateLinkEmployeeToEmployerRequest(linkEmployeeRequestId: Int, status: String): LinkEmployeeToEmployerRequest @AuthorizedUser
   }

@@ -4,6 +4,13 @@ import gql from 'graphql-tag'
 import * as log from 'loglevel'
 import moment from 'moment'
 
+import {
+  poolContractAddress,
+  gasOptionsFromGasAndSpeed,
+  getWeb3Wallet,
+  InstaPoolPayContract,
+} from '@/constructors/contracts'
+
 import Button from '@/components/Button'
 
 import './RequestInstapayForm.sass'
@@ -30,6 +37,8 @@ const getPayableDays = () => {
 
 const RequestInstapayForm = ({ history, data }) => {
 
+  const [lastTransaction, setLastTransaction] = useState('')
+
   if (data.loading) return '...loading...'
 
   const {
@@ -38,20 +47,28 @@ const RequestInstapayForm = ({ history, data }) => {
 
   const payableDays = getPayableDays()
   const availableWages = payableDays * me.wagesPerDay
+  const loanAmountAvailable = availableWages - me.balance
+  const loanAmount = loanAmountAvailable - FEE
 
   console.log(availableWages)
   console.log(FEE)
-  console.log(availableWages - FEE)
+  console.log(loanAmount)
 
   return (
     <Mutation
       mutation={gql`
-        mutation CreateInstapay {
-          createInstapay { status transactionHash }
+        mutation UpdateUser($balance: Float) {
+          updateUser(balance: $balance) { balance }
         }
       `}
+      refetchQueries={() => ([{
+        query: gql`{
+          me { balance }
+        }`,
+      }])}
+      awaitRefetchQueries
     >
-      {(createInstapay, { data, error, loading }) => {
+      {(updateUser, { data, error, loading }) => {
         if (loading) return '...loading...'
 
         return (
@@ -65,18 +82,36 @@ const RequestInstapayForm = ({ history, data }) => {
             Fee: ${FEE} USD
             <br />
 
-            I get: ${availableWages - FEE} USD
+            I get: ${loanAmount} USD
             <br />
 
             <Button
+              disabled={Boolean(Math.floor(loanAmount <= 0))}
               onClick={async () => {
-                await createInstapay()
+                const web3wallet = await getWeb3Wallet()
+
+                InstaPoolPayContract.loan(
+                  web3wallet,
+                  web3.toWei(loanAmount),
+                  {
+                    ...gasOptionsFromGasAndSpeed(null, 'fast'),
+                  },
+                  async (err, tx) => {
+                    if (err) {
+                      log.info(err)
+                    } else {
+                      setLastTransaction(tx)
+                      log.info('Success! tx: ', tx)
+                      await updateUser({ variables: { balance: (me.balance + loanAmount) } })
+                    }
+                  }
+                )
               }}
               children={'Pay Me Now'}
             />
 
             <br />
-            {data ? <a href={`https://ropsten.etherscan.io/tx/${data.transactionHash}`}>{JSON.stringify(data.transactionHash)}</a> : null}
+            {lastTransaction ? <a target="_blank" href={`https://ropsten.etherscan.io/tx/${lastTransaction}`}>{JSON.stringify(lastTransaction)}</a> : null}
 
           </div>
         )

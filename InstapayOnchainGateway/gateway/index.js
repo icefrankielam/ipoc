@@ -17,14 +17,16 @@ process.env.IPOC_POSTGRES_DATABASE = process.env.IPOC_POSTGRES_DATABASE || 'post
 process.env.IPOC_POSTGRES_PASSWORD = process.env.IPOC_POSTGRES_PASSWORD || 'password'
 process.env.IPOC_POSTGRES_PORT = process.env.IPOC_POSTGRES_PORT || 5432
 process.env.IPOC_INSTAPAY_POOL_CONTRACT_ADDRESS_MAINNET = process.env.IPOC_INSTAPAY_POOL_CONTRACT_ADDRESS_MAINNET || ''
-process.env.IPOC_INSTAPAY_POOL_CONTRACT_ADDRESS_ROPSTEN = process.env.IPOC_INSTAPAY_POOL_CONTRACT_ADDRESS_ROPSTEN || '0x74506c5651b4e496b369fa4ebdd9422629a0d838'
+process.env.IPOC_INSTAPAY_POOL_CONTRACT_ADDRESS_ROPSTEN = process.env.IPOC_INSTAPAY_POOL_CONTRACT_ADDRESS_ROPSTEN || '0x730666Fd1409Da3F6d51752C475fDA0934E634E2'
 process.env.IPOC_ETH_NETWORK = process.env.IPOC_ETH_NETWORK || 'ropsten'
 process.env.IPOC_ETH_ACCOUNT = process.env.IPOC_ETH_ACCOUNT || '0xa9Af3D88E5167cA6E9413CBB9b946EC95FE469ee'
 process.env.IPOC_ETH_PRIVATE_KEY = process.env.IPOC_ETH_PRIVATE_KEY || ''
 process.env.REDIS_HOST = process.env.REDIS_HOST || 'redis'
 process.env.REDIS_PORT = process.env.REDIS_PORT || 6379
 process.env.PUSH_SUBSCRIPTION_ENCRYPTION_KEY = process.env.PUSH_SUBSCRIPTION_ENCRYPTION_KEY || 'push_subscription_key'
-process.env.WS_GETH_URL = process.env.WS_GETH_URL || 'https://ropsten.infura.io/v3/bb33dcb7a6b94ab4a66d33d12ec0c53e'
+process.env.WS_GETH_URL = process.env.WS_GETH_URL || 'https://ropsten.infura.io/v3/5ac20e6191bc48e6baf744e90cb12bf6'
+process.env.IPOC_INFURA_PROJECT_ID = process.env.IPOC_INFURA_PROJECT_ID || '5ac20e6191bc48e6baf744e90cb12bf6'
+process.env.IPOC_INFURA_PROJECT_SECRET = process.env.IPOC_INFURA_PROJECT_SECRET || 'a60b25fea0de4820bf2bdcb75bca591b'
 
 
 require('@/main').run()
