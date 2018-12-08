@@ -20,6 +20,7 @@ import LoginPage from '@/pages/LoginPage'
 // import MessagesPage from '@/pages/MessagesPage'
 import SandboxPage from '@/pages/SandboxPage'
 import UserSettingsPage from '@/pages/UserSettingsPage'
+import InvestPage from '@/pages/InvestPage'
 import UserProfilePage from '@/pages/UserProfilePage'
 import EmployerSettingsPage from '@/pages/EmployerSettingsPage'
 import EmployerProfilePage from '@/pages/EmployerProfilePage'
@@ -50,6 +51,7 @@ const ReactRouter = ({ layout }) => {
           <PublicOnlyRoute key={1} exact path="/login" layoutComponent={Layout.Desktop.Public} component={LoginPage} />
           <PublicOnlyRoute key={2} exact path="/register" layoutComponent={Layout.Desktop.Public} component={RegisterPage} />
           <PublicRoute key={3} exact path="/sandbox" layoutComponent={Layout.Desktop.Public} component={SandboxPage} />
+          <PublicRoute key={3} exact path="/invest" layoutComponent={Layout.Desktop.Public} component={InvestPage} />
           <DualRoute
             key={4}
             exact

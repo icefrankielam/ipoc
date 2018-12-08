@@ -10,6 +10,7 @@ const myLinkEmployerRequest = require('./queries/myLinkEmployerRequest')
 const employerLinkedUsers = require('./queries/employerLinkedUsers')
 
 /* Mutations */
+const fund = require('./mutations/fund')
 const register = require('./mutations/register')
 const login = require('./mutations/login')
 const logout = require('./mutations/logout')
@@ -30,6 +31,7 @@ const resolvers = {
     employerLinkedUsers,
   },
   Mutation: {
+    fund,
     register,
     login,
     logout,

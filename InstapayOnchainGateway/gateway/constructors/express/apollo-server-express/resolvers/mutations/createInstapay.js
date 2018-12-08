@@ -1,4 +1,4 @@
-const { createInstapay } = require('@/utils/contracts')
+const { loan } = require('@/utils/contracts')
 const moment = require('moment')
 
 const FEE = 5
@@ -29,7 +29,7 @@ module.exports = async (_, properties, { redis, res, session, models, user }) =>
 
     const amount = availableWages - FEE
 
-    const pay = await createInstapay({ amount })
+    const pay = await loan({ amount })
     console.log(pay)
 
     return { status: 'hello' }
