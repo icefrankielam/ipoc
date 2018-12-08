@@ -87,11 +87,11 @@ const loan = async ({ borrowerAddress, amount }) => {
     const amountString = web3.utils.toWei(amount.toString())
     console.log('amountString: ', amountString)
     const borrowerAddressEncoded = web3.eth.abi.encodeParameter('address', borrowerAddress)
-    const amountStringEncoded = web3.eth.abi.encodeParameter('uint', amountString)
+    const amountStringEncoded = web3.eth.abi.encodeParameter('uint256', amountString)
     console.log('borrowerAddressEncoded: ', borrowerAddressEncoded)
     console.log('amountStringEncoded: ', amountStringEncoded)
     const txBuilder = instaPayPoolContract.methods.loan(
-      borrowerAddressEncoded,
+      borrowerAddress,
       amountStringEncoded
     )
     const account = web3.eth.accounts.privateKeyToAccount('0x' + process.env.IPOC_ETH_PRIVATE_KEY)
@@ -144,8 +144,8 @@ const repay = async ({ amount, borrowerAddress }) => {
     console.log('amount: ', amount)
     console.log('borrowerAddress: ', borrowerAddress)
     const txBuilder = instaPayPoolContract.methods.repay(
-      web3.eth.abi.encodeParameter('address', borrowerAddress),
-      web3.eth.abi.encodeParameter('uint', web3.utils.toWei(amount.toString())) // BN
+      borrowerAddress,
+      web3.eth.abi.encodeParameter('uint256', web3.utils.toWei(amount.toString())) // BN
     )
     const account = web3.eth.accounts.privateKeyToAccount('0x' + process.env.IPOC_ETH_PRIVATE_KEY)
 
