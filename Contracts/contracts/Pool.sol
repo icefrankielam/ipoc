@@ -12,9 +12,16 @@ import "./KyberNetworkProxy.sol";
 ///         support in this version, it is tracked by mapping for now.
 ///      TODO: remove mapping when daemon is implemented
 contract InstaPayPool is Ownable {
-    // Kyber Network Setup
+    /* Ropsten */
+    ///  Kyber Network Setup
+    // KyberNetworkProxy public proxy = KyberNetworkProxy(0x818E6FECD516Ecc3849DAf6845e3EC868087B755);
+    // ERC20 DAI = ERC20(0xaD6D458402F60fD3Bd25163575031ACDce07538D);
+    // ERC20 ETH = ERC20(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE); // Dummy ETH token address for Kyber
+
+    /* MAIN NET */
+    ///  Kyber Network Setup
     KyberNetworkProxy public proxy = KyberNetworkProxy(0x818E6FECD516Ecc3849DAf6845e3EC868087B755);
-    ERC20 DAI = ERC20(0xaD6D458402F60fD3Bd25163575031ACDce07538D);
+    ERC20 DAI = ERC20(0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359);
     ERC20 ETH = ERC20(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE); // Dummy ETH token address for Kyber
 
     uint public DECIMALS = 18;                              // Both DAI & ETH uses 18 decimals
