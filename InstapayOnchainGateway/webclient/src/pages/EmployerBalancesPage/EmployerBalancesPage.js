@@ -71,7 +71,7 @@ const EmployerBalancesPage = ({ data }) => {
                           }
                         )
                       }}
-                      children={'Pay Me Now'}
+                      children={'Repay'}
                     />
                   </div>
                 )
