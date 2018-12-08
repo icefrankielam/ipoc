@@ -204,7 +204,7 @@ const WagesRow = ({ me }) => {
             value={wagesPerDay}
             style={{ width: '370px' }}
             onChange={e => setWagesPerDay(e.target.value)}
-          /> USD
+          /> DAI
           {editWagesMode ? (
             <Button onClick={() => {
               updateUser({ variables: { wagesPerDay: parseInt(wagesPerDay, 10) } })
@@ -235,7 +235,7 @@ const PaycheckInfo = (props) => {
 
   return (
     <div className="PaycheckInfo">
-      My current balance: ${me.balance} USD
+      My current balance: ${me.balance} DAI
       <WalletRow me={me} />
       <WagesRow me={me} />
       <EmployerRow employer={myEmployer} employers={employers} status={myLinkEmployerRequest.status} />

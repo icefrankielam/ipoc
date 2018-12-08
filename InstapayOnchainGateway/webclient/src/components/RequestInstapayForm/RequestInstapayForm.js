@@ -76,13 +76,13 @@ const RequestInstapayForm = ({ history, data }) => {
             Next Paycheck: {moment().add(payableDays, 'd').format('YYYY-MM-DD')}, {payableDays} work days from now
             <br /> 
 
-            Available Wages: ${availableWages} USD
+            Available Wages: ${availableWages} DAI
             <br />
 
-            Fee: ${FEE} USD
+            Fee: ${FEE} DAI
             <br />
 
-            I get: ${loanAmount} USD
+            I get: ${loanAmount} DAI
             <br />
 
             <Button
