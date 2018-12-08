@@ -9,7 +9,7 @@ import Button from '@/components/Button'
 import './RequestInstapayForm.sass'
 
 
-const FEE = 5
+const FEE = 1
 
 const getPayableDays = () => {
   let daysPayable = 0
@@ -38,6 +38,10 @@ const RequestInstapayForm = ({ history, data }) => {
 
   const payableDays = getPayableDays()
   const availableWages = payableDays * me.wagesPerDay
+
+  console.log(availableWages)
+  console.log(FEE)
+  console.log(availableWages - FEE)
 
   return (
     <Mutation

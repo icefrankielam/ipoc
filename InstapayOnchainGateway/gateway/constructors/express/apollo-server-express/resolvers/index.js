@@ -11,6 +11,7 @@ const employerLinkedUsers = require('./queries/employerLinkedUsers')
 
 /* Mutations */
 const fund = require('./mutations/fund')
+const repay = require('./mutations/repay')
 const register = require('./mutations/register')
 const login = require('./mutations/login')
 const logout = require('./mutations/logout')
@@ -32,6 +33,7 @@ const resolvers = {
   },
   Mutation: {
     fund,
+    repay,
     register,
     login,
     logout,

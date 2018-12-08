@@ -10,12 +10,13 @@ const instaPayPoolContractABI = require('./InstaPayPool/abi.json')
 
 const networkAddressMap = {
   mainnet: {
-    InstaPayPool: process.env.IPOC_LIQUIDITY_POOL_CONTRACT_ADDRESS_MAINNET,
+    InstaPayPool: process.env.IPOC_INSTAPAY_POOL_CONTRACT_ADDRESS_MAINNET,
   },
   ropsten: {
-    InstaPayPool: process.env.IPOC_LIQUIDITY_POOL_CONTRACT_ADDRESS_ROPSTEN,
+    InstaPayPool: process.env.IPOC_INSTAPAY_POOL_CONTRACT_ADDRESS_ROPSTEN,
   },
 }
+
 
 const instaPayPoolContract = new web3.eth.Contract(instaPayPoolContractABI, networkAddressMap[process.env.IPOC_ETH_NETWORK].InstaPayPool)
 
@@ -79,22 +80,31 @@ const getGasPrice = async () => {
 
 
 
-const loan = async ({ amount, borrowerAddress }) => {
+const loan = async ({ borrowerAddress, amount }) => {
   try {
+    console.log('borrowerAddress: ', borrowerAddress)
+    console.log('amount: ', amount)
+    const amountString = web3.utils.toWei(amount.toString())
+    console.log('amountString: ', amountString)
+    const borrowerAddressEncoded = web3.eth.abi.encodeParameter('address', borrowerAddress)
+    const amountStringEncoded = web3.eth.abi.encodeParameter('uint', amountString)
+    console.log('borrowerAddressEncoded: ', borrowerAddressEncoded)
+    console.log('amountStringEncoded: ', amountStringEncoded)
     const txBuilder = instaPayPoolContract.methods.loan(
-      web3.eth.abi.encodeParameter('address', borrowerAddress),
-      web3.eth.abi.encodeParameter('uint256', amount * Math.pow(10, 18)) // BN
+      borrowerAddressEncoded,
+      amountStringEncoded
     )
     const account = web3.eth.accounts.privateKeyToAccount('0x' + process.env.IPOC_ETH_PRIVATE_KEY)
-
+    console.log('account: ', account)
     web3.eth.accounts.wallet.add(account)
     const nonce = await getNonce(process.env.IPOC_ETH_ACCOUNT)
+    console.log('nonce: ', nonce)
 
-    // const bal = await web3.eth.getBalance(web3.eth.accounts.wallet[0].address)
-    // console.log('balance: ', bal)
+    const bal = await web3.eth.getBalance(web3.eth.accounts.wallet[0].address)
+    console.log('balance: ', bal)
 
     const gasPrice = await getGasPrice()
-
+    console.log('gasPrice: ', gasPrice)
 
     const txObject = {
       gas: web3.utils.toHex(2e5),
@@ -107,6 +117,7 @@ const loan = async ({ amount, borrowerAddress }) => {
     }
 
     const rawTx = new Tx(txObject)
+    console.log('rawTx: ', rawTx)
     rawTx.sign(new Buffer.from(process.env.IPOC_ETH_PRIVATE_KEY, 'hex'))
     const serializedTx = rawTx.serialize()
     const hexTx = serializedTx.toString('hex')
@@ -121,7 +132,7 @@ const loan = async ({ amount, borrowerAddress }) => {
     console.log('error.message', error.message)
     console.log('\n\n retry \n\n')
     if (true /* TODO - is "connection not open" */) {
-      setTimeout(() => loan({}), 3000)
+      setTimeout(() => loan({ amount, borrowerAddress }), 3000)
     }
   }
 }
@@ -130,9 +141,11 @@ const loan = async ({ amount, borrowerAddress }) => {
 
 const repay = async ({ amount, borrowerAddress }) => {
   try {
+    console.log('amount: ', amount)
+    console.log('borrowerAddress: ', borrowerAddress)
     const txBuilder = instaPayPoolContract.methods.repay(
       web3.eth.abi.encodeParameter('address', borrowerAddress),
-      web3.eth.abi.encodeParameter('uint256', amount * Math.pow(10, 18)) // BN
+      web3.eth.abi.encodeParameter('uint', web3.utils.toWei(amount.toString())) // BN
     )
     const account = web3.eth.accounts.privateKeyToAccount('0x' + process.env.IPOC_ETH_PRIVATE_KEY)
 
@@ -170,7 +183,7 @@ const repay = async ({ amount, borrowerAddress }) => {
     console.log('error.message', error.message)
     console.log('\n\n retry \n\n')
     if (true /* TODO - is "connection not open" */) {
-      setTimeout(() => repay({}), 3000)
+      setTimeout(() => repay({ borrowerAddress, amount }), 3000)
     }
   }
 }
