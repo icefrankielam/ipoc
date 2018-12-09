@@ -108,7 +108,7 @@ const EmployerRow = ({ employer, employers, status }) => {
               </>
             }
           >
-            {content} {`(${status})` || null}
+            {content} {status ? `(${status})` : null}
           </DetailRow>
         )
       }}

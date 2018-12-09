@@ -51,9 +51,7 @@ const RequestInstapayForm = ({ history, data }) => {
   const loanAmountAvailable = availableWages - me.balance
   const loanAmount = loanAmountAvailable - FEE
 
-  console.log(availableWages)
-  console.log(FEE)
-  console.log(loanAmount)
+  const userCannotRequestInstaPay = Boolean(Math.floor(loanAmount <= 0))
 
   return (
     <Mutation
@@ -95,7 +93,7 @@ const RequestInstapayForm = ({ history, data }) => {
             <br />
 
             <Button
-              disabled={Boolean(Math.floor(loanAmount <= 0))}
+              disabled={userCannotRequestInstaPay}
               onClick={async () => {
                 const web3wallet = await getWeb3Wallet()
 
@@ -118,6 +116,10 @@ const RequestInstapayForm = ({ history, data }) => {
               }}
               children={'Pay Me Now'}
             />
+
+            <br />
+            <br />
+            {userCannotRequestInstaPay ? 'NOTE: You already have a loan out. Check back after you have earened more days.' : null}
 
             <br />
             <DetailRow>

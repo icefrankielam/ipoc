@@ -21,7 +21,7 @@ const RequestLoanForm = ({ history }) => {
     >
       {(logout, { data, error }) => (
         <div className="RequestLoanForm">
-          RequestLoanForm
+          Request Additional Loan Form ... (Coming Soon)
         </div>
       )}
     </Mutation>
